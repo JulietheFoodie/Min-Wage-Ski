@@ -5,21 +5,17 @@ date: "5/22/2018"
 output: html_document
 ---
 
-title: "Mapping Counties"
-author: "Julie Norman"
-date: "5/21/2018"
-output: html_document
----
-
-# Libraries
 ```{r}
+library(osrm)
+library(dplyr)
 library(rgdal)
 library(rgeos)
 library(leaflet)
+library(mapview)
+webshot::install_phantomjs()
 ```
 
-# Data Download
-
+# Data Download for Counties 
 ```{r}
 url<-"http://www2.census.gov/geo/tiger/TIGER2010DP1/County_2010Census_DP1.zip"
 downloaddir<-getwd()
@@ -36,31 +32,349 @@ dat<-readOGR(downloaddir, "County_2010Census_DP1")
 ```
 
 
-# New York
+# Creating Polygon
+
+## Utah: A-M
 ```{r}
-# ----- Create a subset of New York counties
-nysub <- dat[substring(dat$GEOID10, 1, 2) == "36",]
+# Alta Ski Area
+alta_iso <- osrmIsochrone(loc = c(-111.636874, 40.589791), breaks = seq(from = 0,to = 60, by = 60))
+
+# Beaver Mountain
+beav_iso <- osrmIsochrone(loc = c(-111.544144, 41.968075), breaks = seq(from = 0,to = 60))
+
+# Brian Head 
+brian_iso <- osrmIsochrone(loc = c(-112.849978, 37.702114), breaks = seq(from = 0,to = 60))
+
+# Brighton
+brigh_iso <- osrmIsochrone(loc = c(-111.5829, 40.598166), breaks = seq(from = 0,to = 60))
+
+# Cherry Peak
+cher_iso <- osrmIsochrone(loc = c(-111.758681, 41.926199), breaks = seq(from = 0,to = 60))
+
+# Deer Valley
+deer_iso <- osrmIsochrone(loc = c(-111.478452, 40.637387), breaks = seq(from = 0,to = 60))
+
+# Eagle Point
+eagle_iso <- osrmIsochrone(loc = c(-112.383856, 38.320324), breaks = seq(from = 0,to = 60))
+```
+
+## Utah: N-Z
+
+```{r}
+# Nordic Valley
+nord_iso <- osrmIsochrone(loc = c(-111.864812, 41.310101), breaks = seq(from = 0,to = 60))
+
+# Park City Mountain
+pcmnt_iso <- osrmIsochrone(loc = c(-111.864812, 40.651401), breaks = seq(from = 0,to = 60))
+
+# Powder Mountain
+powmnt_iso <- osrmIsochrone(loc = c(-111.780685, 41.378963), breaks = seq(from = 0,to = 60))
+
+# Snowbasin
+sbasin_iso <- osrmIsochrone(loc = c(-111.852154, 41.212922), breaks = seq(from = 0,to = 60))
+
+# Snowbird
+sbird_iso <- osrmIsochrone(loc = c(-111.656782, 40.58081), breaks = seq(from = 0,to = 60))
+
+# Solitude
+solit_iso <- osrmIsochrone(loc = c(-111.591896, 40.619763), breaks = seq(from = 0,to = 60))
+
+# Sundance
+sund_iso <- osrmIsochrone(loc = c(-111.578754, 40.392167), breaks = seq(from = 0,to = 60))
+```
+
+## Colorado: A-D
+
+```{r}
+# Arapahoe Basin
+arap_iso <- osrmIsochrone(loc = c(-105.871631, 39.642229), breaks = seq(from = 0,to = 60))
+
+# Aspen Highlands
+asph_iso <- osrmIsochrone(loc = c(-106.855361, 39.182412), breaks = seq(from = 0,to = 60))
+
+# Aspen Mountain
+aspmnt_iso <- osrmIsochrone(loc = c(-106.818241, 39.186309), breaks = seq(from = 0,to = 60))
+
+# Buttermilk
+butm_iso <- osrmIsochrone(loc = c(-106.782767, 39.14942), breaks = seq(from = 0,to = 60))
+
+# Cooper
+coop_iso <- osrmIsochrone(loc = c(-106.302809, 39.360788), breaks = seq(from = 0,to = 60))
+
+# Copper Mountain
+copp_iso <- osrmIsochrone(loc = c(-106.155462, 39.500528), breaks = seq(from = 0,to = 60))
+
+# Crested Butte
+crest_iso <- osrmIsochrone(loc = c(-106.965837, 38.898899), breaks = seq(from = 0,to = 60))
+
+```
+
+
+## Colorado: E-M
+
+```{r}
+# Echo Mountain
+echo_iso <- osrmIsochrone(loc = c(-105.521345, 39.683069), breaks = seq(from = 0,to = 60))
+
+# Eldora
+eldor_iso <- osrmIsochrone(loc = c(-105.58841, 39.936613), breaks = seq(from = 0,to = 60))
+
+# Granby Ranch
+gran_iso <- osrmIsochrone(loc = c(-105.906025, 40.045224), breaks = seq(from = 0,to = 60))
+
+# Hesperus Ski Area
+hesp_iso <- osrmIsochrone(loc = c(-108.055101, 37.299593), breaks = seq(from = 0,to = 60))
+
+# Howelsen Hill
+how_iso <- osrmIsochrone(loc = c(-106.83804, 40.483352), breaks = seq(from = 0,to = 60))
+
+# Kendall Mountain
+kend_iso <- osrmIsochrone(loc = c(-107.656888, 37.81124), breaks = seq(from = 0,to = 60))
+
+# Loveland
+love_iso <- osrmIsochrone(loc = c(-105.897897, 39.680029), breaks = seq(from = 0,to = 60))
+
+# Monarch
+mon_iso <- osrmIsochrone(loc = c(-106.332232, 38.512157), breaks = seq(from = 0,to = 60))
+
+```
+
+
+## Colorado: N-Z
+
+```{r}
+# Powderhorn
+powdh_iso <- osrmIsochrone(loc = c(-108.150518, 39.069343), breaks = seq(from = 0,to = 60))
+
+# Purgatory
+purg_iso <- osrmIsochrone(loc = c(-107.814231, 37.630849), breaks = seq(from = 0,to = 60))
+
+# Silverton
+silv_iso <- osrmIsochrone(loc = c(-107.665919, 37.884608), breaks = seq(from = 0,to = 60))
+
+# Snowmass
+smass_iso <- osrmIsochrone(loc = c(-106.94987, 39.208751), breaks = seq(from = 0,to = 60))
+
+# Steamboat
+steam_iso <- osrmIsochrone(loc = c(-106.332232, 40.457098), breaks = seq(from = 0,to = 60))
+
+# Sunlight Mountain
+sunmnt_iso <- osrmIsochrone(loc = c(-107.338794, 39.399884), breaks = seq(from = 0,to = 60))
+
+# Telluride
+tell_iso <- osrmIsochrone(loc = c(-107.84637, 37.93651), breaks = seq(from = 0,to = 60))
+
+# Winter Park
+wint_iso <- osrmIsochrone(loc = c(-105.762488, 39.886839), breaks = seq(from = 0,to = 60))
+
+# Wolf Creek 
+wolf_iso <- osrmIsochrone(loc = c(-106.793572, 37.474757), breaks = seq(from = 0,to = 60))
+
+```
+
+
+# Plotting the polygon 
+
+## Plot Counties for Utah
+
+```{r}
+# ----- Create a subset of Utah counties
+utsub<-dat[substring(dat$GEOID10, 1, 2) == "49",]
 
 # ----- Transform to EPSG 4326 - WGS84 (required)
-nysub <- spTransform(nysub, CRS("+init=epsg:4326"))
+utsub<-spTransform(utsub, CRS("+init=epsg:4326"))
 
 # ----- save the data slot
-nysub_data <- nysub@data[,c("GEOID10", "ALAND10")]
+utsub_data<-utsub@data[,c("GEOID10", "ALAND10")]
 
 # ----- simplification yields a SpatialPolygons class
-nysub <- gSimplify(nysub,tol=0.01, topologyPreserve=TRUE)
+utsub<-gSimplify(utsub,tol=0.01, topologyPreserve=TRUE)
 
 # ----- to write to geojson we need a SpatialPolygonsDataFrame
-nysub <- SpatialPolygonsDataFrame(nysub, data=nysub_data)
-
+utsub<-SpatialPolygonsDataFrame(utsub, data=utsub_data)
 ```
 
-# Map NY
+
+
+### Draw Map For Utah
 ```{r}
-leaflet() %>%
-  addTiles() %>%
-  addPolygons(data = nysub)
+
+UT_map <- leaflet() %>% 
+                setView(-111.733197, 39.947559, zoom = 07) %>%
+                addProviderTiles("CartoDB.Positron", group="Greyscale") %>% 
+                addMarkers(lng = -111.891, lat = 40.7608, popup = "Salt Lake City") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # alta
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = alta_iso, popup = alta_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke=FALSE, color = "blue", # beaver
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = beav_iso, popup = beav_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # brian head
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = brian_iso, popup = brian_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # brighton
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = brigh_iso, popup = brigh_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # cherry peak
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = cher_iso, popup = cher_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # deer valley
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = deer_iso, popup = deer_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # eagle point
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = eagle_iso, popup = eagle_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # nordic valley
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = nord_iso, popup = nord_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # park city mountain
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = pcmnt_iso, popup = pcmnt_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # powder mountain
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = powmnt_iso, popup = powmnt_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # Snowbasin
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = sbasin_iso, popup = sbasin_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # Snowbird
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = sbird_iso, popup = sbird_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # Solitude
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = solit_iso, popup = solit_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # Sundance
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = sund_iso, popup = sund_iso@data$drive_times,
+                                        group = "Drive Time") %>%   
+                addTiles() %>%
+                addPolygons(fill = FALSE, color = "black", data = utsub)
+                
 ```
+
+
+### Draw Map For Colorado
+```{r}
+
+CO_map <- leaflet() %>% 
+                setView(-105.549922, 39.047227, zoom = 07) %>%
+                addProviderTiles("CartoDB.Positron", group="Greyscale") %>% 
+                addMarkers(lng = -104.9903, lat = 39.7392, popup = "Denver") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # arapahoe bosin
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = arap_iso, popup = arap_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # aspen highlands
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = asph_iso, popup = asph_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # aspen mountain
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = aspmnt_iso, popup = aspmnt_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # buttermilk
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = butm_iso, popup = butm_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # cooper
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = coop_iso, popup = coop_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # copper mountain
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = copp_iso, popup = copp_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # crested butte
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = crest_iso, popup = crest_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # echo mountain
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = echo_iso, popup = echo_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # loveland
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = love_iso, popup = love_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # monarch
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = mon_iso, popup = mon_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # powderhorn
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = powdh_iso, popup = powdh_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # purgatory resort
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = purg_iso, popup = purg_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # silverton
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = silv_iso, popup = silv_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # snowmass
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = smass_iso, popup = smass_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # steamboat
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = steam_iso, popup = steam_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # sunlight mountain
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = sunmnt_iso, popup = sunmnt_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # telluride
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = tell_iso, popup = tell_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # winter park
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = wint_iso, popup = wint_iso@data$drive_times,
+                                        group = "Drive Time") %>% 
+                addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # wolf creek
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = wolf_iso, popup = wolf_iso@data$drive_times,
+                                        group = "Drive Time") %>%
+                addTiles() %>%
+                addPolygons(fill = FALSE, color = "black", data = cosub)
+                
+```
+
+
+# Export Maps
+```{r}
+mapshot(UT_map, file = "UT_map.png")
+mapshot(CO_map, file = "CO_map.png")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Utah
 

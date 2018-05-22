@@ -1,0 +1,20 @@
+---
+title: "Data Cleaning"
+author: "Julie Norman"
+date: "5/22/2018"
+output: html_document
+---
+
+# Libraries
+```{r}
+library(readxl)
+```
+
+
+```{r}
+UT_CO_Min_Wage_Research <- read_excel("~/Documents/Minimum Wage Ski/UT_CO_Min_Wage_Research.xls", 
+    sheet = "Monthly")
+UT_CO_Min_Wage_ReadMe <- read_excel("~/Documents/Minimum Wage Ski/UT_CO_Min_Wage_Research.xls", 
+    sheet = "README")
+```
+
