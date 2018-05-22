@@ -1,0 +1,90 @@
+---
+title: "Mapping Counties Practice"
+author: "Julie Norman"
+date: "5/22/2018"
+output: html_document
+---
+
+title: "Mapping Counties"
+author: "Julie Norman"
+date: "5/21/2018"
+output: html_document
+---
+
+# Libraries
+```{r}
+library(rgdal)
+library(rgeos)
+library(leaflet)
+```
+
+# Data Download
+
+```{r}
+url<-"http://www2.census.gov/geo/tiger/TIGER2010DP1/County_2010Census_DP1.zip"
+downloaddir<-getwd()
+destname<-"tiger_county.zip"
+download.file(url, destname)
+unzip(destname, exdir=downloaddir, junkpaths=TRUE)
+
+filename<-list.files(downloaddir, pattern=".shp", full.names=FALSE)
+filename<-gsub(".shp", "", filename)
+
+# ----- Read in shapefile (NAD83 coordinate system)
+# ----- this is a fairly big shapefile and takes 1 minute to read
+dat<-readOGR(downloaddir, "County_2010Census_DP1") 
+```
+
+
+# New York
+```{r}
+# ----- Create a subset of New York counties
+nysub <- dat[substring(dat$GEOID10, 1, 2) == "36",]
+
+# ----- Transform to EPSG 4326 - WGS84 (required)
+nysub <- spTransform(nysub, CRS("+init=epsg:4326"))
+
+# ----- save the data slot
+nysub_data <- nysub@data[,c("GEOID10", "ALAND10")]
+
+# ----- simplification yields a SpatialPolygons class
+nysub <- gSimplify(nysub,tol=0.01, topologyPreserve=TRUE)
+
+# ----- to write to geojson we need a SpatialPolygonsDataFrame
+nysub <- SpatialPolygonsDataFrame(nysub, data=nysub_data)
+
+```
+
+# Map NY
+```{r}
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(data = nysub)
+```
+
+# Utah
+
+```{r}
+# ----- Create a subset of Utah counties
+utsub<-dat[substring(dat$GEOID10, 1, 2) == "49",]
+
+# ----- Transform to EPSG 4326 - WGS84 (required)
+utsub<-spTransform(utsub, CRS("+init=epsg:4326"))
+
+# ----- save the data slot
+utsub_data<-utsub@data[,c("GEOID10", "ALAND10")]
+
+# ----- simplification yields a SpatialPolygons class
+utsub<-gSimplify(utsub,tol=0.01, topologyPreserve=TRUE)
+
+# ----- to write to geojson we need a SpatialPolygonsDataFrame
+utsub<-SpatialPolygonsDataFrame(utsub, data=utsub_data)
+```
+
+
+# Map UT
+```{r}
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(data = utsub)
+```

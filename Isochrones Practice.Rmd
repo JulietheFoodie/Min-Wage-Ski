@@ -1,0 +1,42 @@
+---
+title: "Isochrones Practice"
+author: "Julie Norman"
+date: "5/22/2018"
+output: html_document
+---
+
+```{r}
+library(osrm)
+library(dplyr)
+library(leaflet)
+```
+
+```{r}
+iso <- osrmIsochrone(loc = c(151.207049, -33.886475), breaks = seq(from = 0,to = 30, by = 5))
+class(iso)
+```
+
+# Plotting the polygon
+
+```{r}
+# add drive time description to be later used as a legend
+iso@data$drive_times <- factor(paste(iso@data$min, "to", iso@data$max, "min"))
+
+# color palette for each area
+factpal <- colorFactor(rev(heat.colors(5)), iso@data$drive_times)
+```
+
+# Draw Map
+```{r}
+# draw map
+leaflet() %>% 
+                setView(151.207049, -33.886475, zoom = 11) %>%
+                addProviderTiles("CartoDB.Positron", group="Greyscale") %>% 
+                addMarkers(lng = 151.207049, lat = -33.886475, popup = "100 Chalmers Street") %>% 
+                addPolygons(fill=TRUE, stroke=TRUE, color = "black",
+                                        
+                                        weight=0.5, fillOpacity=0.2,
+                                        data = iso, popup = iso@data$drive_times,
+                                        group = "Drive Time") 
+              
+```
