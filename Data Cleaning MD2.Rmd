@@ -8,13 +8,36 @@ output: html_document
 # Libraries
 ```{r}
 library(readxl)
+library(tidyr)
+library(dplyr)
+library(reshape2)
 ```
 
 
 ```{r}
-UT_CO_Min_Wage_Research <- read_excel("~/Documents/Minimum Wage Ski/UT_CO_Min_Wage_Research.xls", 
-    sheet = "Monthly")
-UT_CO_Min_Wage_ReadMe <- read_excel("~/Documents/Minimum Wage Ski/UT_CO_Min_Wage_Research.xls", 
-    sheet = "README")
+ut_wide <- read_excel("~/Documents/Minimum Wage Ski/UT_CO_Min_Wage_Research.xls", 
+    sheet = "panel")
+
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
