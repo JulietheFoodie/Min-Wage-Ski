@@ -261,9 +261,29 @@ UT_map <- leaflet() %>%
                                         group = "Drive Time") %>%   
                 addTiles() %>%
                 addPolygons(fill = FALSE, color = "black", data = utsub)
+
+UT_map
                 
 ```
 
+## Plot Counties for Colorado
+
+```{r}
+# ----- Create a subset of Colorado counties
+cosub<-dat[substring(dat$GEOID10, 1, 2) == "08",]
+
+# ----- Transform to EPSG 4326 - WGS84 (required)
+cosub<-spTransform(cosub, CRS("+init=epsg:4326"))
+
+# ----- save the data slot
+cosub_data<-cosub@data[,c("GEOID10", "ALAND10")]
+
+# ----- simplification yields a SpatialPolygons class
+cosub<-gSimplify(cosub,tol=0.01, topologyPreserve=TRUE)
+
+# ----- to write to geojson we need a SpatialPolygonsDataFrame
+cosub<-SpatialPolygonsDataFrame(cosub, data=cosub_data)
+```
 
 ### Draw Map For Colorado
 ```{r}
