@@ -1,208 +1,30 @@
 ---
-title: "Isocromes MD1"
+title: "Isochrones MD1 prt. 2"
 author: "Julie Norman"
-date: "5/22/2018"
+date: "8/11/2018"
 output: html_document
 ---
 
-```{r}
-library(osrm)
-library(dplyr)
-library(rgdal)
-library(rgeos)
-library(leaflet)
-library(mapview)
-webshot::install_phantomjs()
-```
-
-# Data Download for Counties 
-```{r}
-url<-"http://www2.census.gov/geo/tiger/TIGER2010DP1/County_2010Census_DP1.zip"
-downloaddir<-getwd()
-destname<-"tiger_county.zip"
-download.file(url, destname)
-unzip(destname, exdir=downloaddir, junkpaths=TRUE)
-
-filename<-list.files(downloaddir, pattern=".shp", full.names=FALSE)
-filename<-gsub(".shp", "", filename)
-
-# ----- Read in shapefile (NAD83 coordinate system)
-# ----- this is a fairly big shapefile and takes 1 minute to read
-dat<-readOGR(downloaddir, "County_2010Census_DP1") 
-```
-
-
-# Creating Polygon
-
-## Utah: A-M
-```{r}
-# Alta Ski Area
-alta_iso <- osrmIsochrone(loc = c(-111.636874, 40.589791), breaks = seq(from = 0,to = 60, by = 60))
-
-# Beaver Mountain
-beav_iso <- osrmIsochrone(loc = c(-111.544144, 41.968075), breaks = seq(from = 0,to = 60))
-
-# Brian Head 
-brian_iso <- osrmIsochrone(loc = c(-112.849978, 37.702114), breaks = seq(from = 0,to = 60))
-
-# Brighton
-brigh_iso <- osrmIsochrone(loc = c(-111.5829, 40.598166), breaks = seq(from = 0,to = 60))
-
-# Cherry Peak
-cher_iso <- osrmIsochrone(loc = c(-111.758681, 41.926199), breaks = seq(from = 0,to = 60))
-
-# Deer Valley
-deer_iso <- osrmIsochrone(loc = c(-111.478452, 40.637387), breaks = seq(from = 0,to = 60))
-
-# Eagle Point
-eagle_iso <- osrmIsochrone(loc = c(-112.383856, 38.320324), breaks = seq(from = 0,to = 60))
-```
-
-## Utah: N-Z
-
-```{r}
-# Nordic Valley
-nord_iso <- osrmIsochrone(loc = c(-111.864812, 41.310101), breaks = seq(from = 0,to = 60))
-
-# Park City Mountain
-pcmnt_iso <- osrmIsochrone(loc = c(-111.864812, 40.651401), breaks = seq(from = 0,to = 60))
-
-# Powder Mountain
-powmnt_iso <- osrmIsochrone(loc = c(-111.780685, 41.378963), breaks = seq(from = 0,to = 60))
-
-# Snowbasin
-sbasin_iso <- osrmIsochrone(loc = c(-111.852154, 41.212922), breaks = seq(from = 0,to = 60))
-
-# Snowbird
-sbird_iso <- osrmIsochrone(loc = c(-111.656782, 40.58081), breaks = seq(from = 0,to = 60))
-
-# Solitude
-solit_iso <- osrmIsochrone(loc = c(-111.591896, 40.619763), breaks = seq(from = 0,to = 60))
-
-# Sundance
-sund_iso <- osrmIsochrone(loc = c(-111.578754, 40.392167), breaks = seq(from = 0,to = 60))
-```
-
-## Colorado: A-D
-
-```{r}
-# Arapahoe Basin
-arap_iso <- osrmIsochrone(loc = c(-105.871631, 39.642229), breaks = seq(from = 0,to = 60))
-
-# Aspen Highlands
-asph_iso <- osrmIsochrone(loc = c(-106.855361, 39.182412), breaks = seq(from = 0,to = 60))
-
-# Aspen Mountain
-aspmnt_iso <- osrmIsochrone(loc = c(-106.818241, 39.186309), breaks = seq(from = 0,to = 60))
-
-# Buttermilk
-butm_iso <- osrmIsochrone(loc = c(-106.782767, 39.14942), breaks = seq(from = 0,to = 60))
-
-# Cooper
-coop_iso <- osrmIsochrone(loc = c(-106.302809, 39.360788), breaks = seq(from = 0,to = 60))
-
-# Copper Mountain
-copp_iso <- osrmIsochrone(loc = c(-106.155462, 39.500528), breaks = seq(from = 0,to = 60))
-
-# Crested Butte
-crest_iso <- osrmIsochrone(loc = c(-106.965837, 38.898899), breaks = seq(from = 0,to = 60))
-
-```
-
-
-## Colorado: E-M
-
-```{r}
-# Echo Mountain
-echo_iso <- osrmIsochrone(loc = c(-105.521345, 39.683069), breaks = seq(from = 0,to = 60))
-
-# Eldora
-eldor_iso <- osrmIsochrone(loc = c(-105.58841, 39.936613), breaks = seq(from = 0,to = 60))
-
-# Granby Ranch
-gran_iso <- osrmIsochrone(loc = c(-105.906025, 40.045224), breaks = seq(from = 0,to = 60))
-
-# Hesperus Ski Area
-hesp_iso <- osrmIsochrone(loc = c(-108.055101, 37.299593), breaks = seq(from = 0,to = 60))
-
-# Howelsen Hill
-how_iso <- osrmIsochrone(loc = c(-106.83804, 40.483352), breaks = seq(from = 0,to = 60))
-
-# Kendall Mountain
-kend_iso <- osrmIsochrone(loc = c(-107.656888, 37.81124), breaks = seq(from = 0,to = 60))
-
-# Loveland
-love_iso <- osrmIsochrone(loc = c(-105.897897, 39.680029), breaks = seq(from = 0,to = 60))
-
-# Monarch
-mon_iso <- osrmIsochrone(loc = c(-106.332232, 38.512157), breaks = seq(from = 0,to = 60))
-
-```
-
-
-## Colorado: N-Z
-
-```{r}
-# Powderhorn
-powdh_iso <- osrmIsochrone(loc = c(-108.150518, 39.069343), breaks = seq(from = 0,to = 60))
-
-# Purgatory
-purg_iso <- osrmIsochrone(loc = c(-107.814231, 37.630849), breaks = seq(from = 0,to = 60))
-
-# Silverton
-silv_iso <- osrmIsochrone(loc = c(-107.665919, 37.884608), breaks = seq(from = 0,to = 60))
-
-# Snowmass
-smass_iso <- osrmIsochrone(loc = c(-106.94987, 39.208751), breaks = seq(from = 0,to = 60))
-
-# Steamboat
-steam_iso <- osrmIsochrone(loc = c(-106.332232, 40.457098), breaks = seq(from = 0,to = 60))
-
-# Sunlight Mountain
-sunmnt_iso <- osrmIsochrone(loc = c(-107.338794, 39.399884), breaks = seq(from = 0,to = 60))
-
-# Telluride
-tell_iso <- osrmIsochrone(loc = c(-107.84637, 37.93651), breaks = seq(from = 0,to = 60))
-
-# Winter Park
-wint_iso <- osrmIsochrone(loc = c(-105.762488, 39.886839), breaks = seq(from = 0,to = 60))
-
-# Wolf Creek 
-wolf_iso <- osrmIsochrone(loc = c(-106.793572, 37.474757), breaks = seq(from = 0,to = 60))
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
 # Plotting the polygon 
 
-## Plot Counties for Utah
+# Merge data sets
 
 ```{r}
-# ----- Create a subset of Utah counties
-utsub<-dat[substring(dat$GEOID10, 1, 2) == "49",]
+(-105.549922-111.733197)/2
 
-# ----- Transform to EPSG 4326 - WGS84 (required)
-utsub<-spTransform(utsub, CRS("+init=epsg:4326"))
-
-# ----- save the data slot
-utsub_data<-utsub@data[,c("GEOID10", "ALAND10")]
-
-# ----- simplification yields a SpatialPolygons class
-utsub<-gSimplify(utsub,tol=0.01, topologyPreserve=TRUE)
-
-# ----- to write to geojson we need a SpatialPolygonsDataFrame
-utsub<-SpatialPolygonsDataFrame(utsub, data=utsub_data)
+(39.947559+39.047227)/2
 ```
 
-
-
-### Draw Map For Utah
 ```{r}
-
-UT_map <- leaflet() %>% 
-                setView(-111.733197, 39.947559, zoom = 07) %>%
+UTCO_map <- leaflet() %>% 
+                setView(-108.6416, 39.49739, zoom = 06) %>%
                 addProviderTiles("CartoDB.Positron", group="Greyscale") %>% 
-                addMarkers(lng = -111.891, lat = 40.7608, popup = "Salt Lake City") %>% 
+                #addMarkers(lng = -111.891, lat = 40.7608, popup = "Salt Lake City") %>% 
                 addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # alta
                                         weight=0.5, fillOpacity=0.2,
                                         data = alta_iso, popup = alta_iso@data$drive_times,
@@ -260,38 +82,9 @@ UT_map <- leaflet() %>%
                                         data = sund_iso, popup = sund_iso@data$drive_times,
                                         group = "Drive Time") %>%   
                 addTiles() %>%
-                addPolygons(fill = FALSE, color = "black", data = utsub)
-
-UT_map
-                
-```
-
-## Plot Counties for Colorado
-
-```{r}
-# ----- Create a subset of Colorado counties
-cosub<-dat[substring(dat$GEOID10, 1, 2) == "08",]
-
-# ----- Transform to EPSG 4326 - WGS84 (required)
-cosub<-spTransform(cosub, CRS("+init=epsg:4326"))
-
-# ----- save the data slot
-cosub_data<-cosub@data[,c("GEOID10", "ALAND10")]
-
-# ----- simplification yields a SpatialPolygons class
-cosub<-gSimplify(cosub,tol=0.01, topologyPreserve=TRUE)
-
-# ----- to write to geojson we need a SpatialPolygonsDataFrame
-cosub<-SpatialPolygonsDataFrame(cosub, data=cosub_data)
-```
-
-### Draw Map For Colorado
-```{r}
-
-CO_map <- leaflet() %>% 
-                setView(-105.549922, 39.047227, zoom = 07) %>%
+                addPolygons(fill = FALSE, color = "black", data = utsub) %>%
                 addProviderTiles("CartoDB.Positron", group="Greyscale") %>% 
-                addMarkers(lng = -104.9903, lat = 39.7392, popup = "Denver") %>% 
+                #addMarkers(lng = -104.9903, lat = 39.7392, popup = "Denver") %>% 
                 addPolygons(fill=TRUE, stroke= FALSE, color = "blue", # arapahoe bosin
                                         weight=0.5, fillOpacity=0.2,
                                         data = arap_iso, popup = arap_iso@data$drive_times,
@@ -371,56 +164,14 @@ CO_map <- leaflet() %>%
                 addTiles() %>%
                 addPolygons(fill = FALSE, color = "black", data = cosub)
                 
+
+UTCO_map
 ```
 
-
-# Export Maps
-```{r}
-mapshot(UT_map, file = "UT_map.png")
-mapshot(CO_map, file = "CO_map.png")
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Utah
+# Export Map
 
 ```{r}
-# ----- Create a subset of Utah counties
-utsub<-dat[substring(dat$GEOID10, 1, 2) == "49",]
-
-# ----- Transform to EPSG 4326 - WGS84 (required)
-utsub<-spTransform(utsub, CRS("+init=epsg:4326"))
-
-# ----- save the data slot
-utsub_data<-utsub@data[,c("GEOID10", "ALAND10")]
-
-# ----- simplification yields a SpatialPolygons class
-utsub<-gSimplify(utsub,tol=0.01, topologyPreserve=TRUE)
-
-# ----- to write to geojson we need a SpatialPolygonsDataFrame
-utsub<-SpatialPolygonsDataFrame(utsub, data=utsub_data)
-```
-
-
-# Map UT
-```{r}
-leaflet() %>%
-  addTiles() %>%
-  addPolygons(data = utsub)
+mapshot(UTCO_map, file = "UTCO_map.png")
 ```
 
 
