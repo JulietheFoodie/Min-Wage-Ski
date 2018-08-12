@@ -370,6 +370,8 @@ CO_map <- leaflet() %>%
                                         group = "Drive Time") %>%
                 addTiles() %>%
                 addPolygons(fill = FALSE, color = "black", data = cosub)
+CO_map
+
                 
 ```
 
@@ -393,34 +395,5 @@ mapshot(CO_map, file = "CO_map.png")
 
 
 
-
-
-
-# Utah
-
-```{r}
-# ----- Create a subset of Utah counties
-utsub<-dat[substring(dat$GEOID10, 1, 2) == "49",]
-
-# ----- Transform to EPSG 4326 - WGS84 (required)
-utsub<-spTransform(utsub, CRS("+init=epsg:4326"))
-
-# ----- save the data slot
-utsub_data<-utsub@data[,c("GEOID10", "ALAND10")]
-
-# ----- simplification yields a SpatialPolygons class
-utsub<-gSimplify(utsub,tol=0.01, topologyPreserve=TRUE)
-
-# ----- to write to geojson we need a SpatialPolygonsDataFrame
-utsub<-SpatialPolygonsDataFrame(utsub, data=utsub_data)
-```
-
-
-# Map UT
-```{r}
-leaflet() %>%
-  addTiles() %>%
-  addPolygons(data = utsub)
-```
 
 

@@ -10,9 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-# Plotting the polygon 
 
-# Merge data sets
+
+# Calculate setview
 
 ```{r}
 (-105.549922-111.733197)/2
@@ -20,6 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 (39.947559+39.047227)/2
 ```
 
+# Plotting the polygon 
 ```{r}
 UTCO_map <- leaflet() %>% 
                 setView(-108.6416, 39.49739, zoom = 06) %>%
