@@ -14,6 +14,7 @@ N10_19          N       Number of Establishments: 10-19 Employee Size Class
 N20_49          N       Number of Establishments: 20-49 Employee Size Class
 N50_99          N       Number of Establishments: 50-99 Employee Size Class
 N100_249        N       Number of Establishments: 100-249 Employee Size Class
+
 N250_499        N       Number of Establishments: 250-499 Employee Size Class
 N500_999        N       Number of Establishments: 500-999 Employee Size Class
 N1000           N       Number of Establishments: 1,000 or More Employee Size Class
