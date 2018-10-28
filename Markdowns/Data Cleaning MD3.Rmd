@@ -82,7 +82,8 @@ summary(m2)
 ## stata reg three
 
 ```{r}
-m3 <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15 + Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute,
+
+m3 <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+  ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute,
   data = finaldata, index=c("category", "year"), model="within")
 
 summary(m3)
@@ -99,10 +100,9 @@ summary(m3a)
 
 
 ```{r}
-m3b <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15 + Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute,
-  data = finaldata, index=c("category", "year"), model="within", SKI == 0)
+m4 <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+  ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute | SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+  ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute  + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + discyouth + burdenedhh, data = finaldata, index=c("category", "year"), model="within")
 
-summary(m3b)
+summary(m4)
 ```
 
 
