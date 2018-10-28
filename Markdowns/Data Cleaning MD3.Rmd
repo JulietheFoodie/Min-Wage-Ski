@@ -11,13 +11,98 @@ library(readxl)
 library(tidyr)
 library(dplyr)
 library(reshape2)
+library(plm)
+library(AER)
+
+```
+
+#Upload Data
+
+```{r}
+
+
+finaldata <- read_excel("~/Documents/Economics/Research/Minimum Wage Ski/Data Sources/final panel data.xlsx")
+
 ```
 
 
 ```{r}
-ut_wide <- read_excel("~/Documents/Minimum Wage Ski/UT_CO_Min_Wage_Research.xls", 
-    sheet = "panel")
 
+
+finaldata$statefip <- as.factor(finaldata$statefip)
+finaldata$countfip <- as.factor(finaldata$countfip)
+finaldata$statecofip <- as.factor(finaldata$statecofip)
+
+finaldata$category <- with(finaldata, interaction(finaldata$statefip,  finaldata$countfip))
+
+finaldata$category <- factor(finaldata$category)
+
+str(finaldata)
+```
+
+
+
+
+
+# Regression Fixed Effects
+
+```{r}
+m1 <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute,
+  data = finaldata, index=c("category", "year"), model="within")
+
+m1b <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute | . -urn  (+CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute+ discyouth + burdenedhh), data = finaldata, index=c("category", "year"), model="within")
+
+summary(m1)
+
+```
+
+Y11, Y12, Y13, Y14, Y15, Y16, Y11xCO, Y12xCO, Y13xCO, Y14xCO, Y15xCO, Y16xCO, ln_minwage, ln_medhhinc, hsgrad, bsdeg, black, hspn, povrateall, eqfxsubprime, incineq, ln_medage, avgcommute,
+
+## Reg two 
+
+end: urn
+exog: SKI CO Y11 Y12 Y13 Y14 Y15 Y16 Y11xCO Y12xCO Y13xCO Y14xCO Y15xCO Y16xCO ln_minwage ln_medhhinc hsgrad bsdeg black hspn povrateall eqfxsubprime incineq ln_medage avgcommute 
+instrum: CO Y11 Y12 Y13 Y14 Y15 Y16 ln_minwage ln_medhhinc hsgrad bsdeg black hspn povrateall eqfxsubprime incineq ln_medage avgcommute  discyouth  burdenedhh
+
+```{r}
+#iv1 = ivreg(lquant ~ lprice | tdiff , data = cigs)
+
+m2 <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute | SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute  + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + discyouth + burdenedhh, data = finaldata, index=c("category", "year"), model="within")
+
+#m2 <- ivreg(ln_n ~urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute| urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute +CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute+ discyouth + burdenedhh, data = finaldata)
+
+#m2 <- ivreg(ln_n ~ SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + urn | SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + discyouth + burdenedhh, data = finaldata)
+
+#m2 <- ivreg(ln_n ~ SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + urn | .-urn + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute+ discyouth + burdenedhh, data = finaldata)
+
+summary(m2)
+```
+
+
+## stata reg three
+
+```{r}
+m3 <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15 + Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute,
+  data = finaldata, index=c("category", "year"), model="within")
+
+summary(m3)
+```
+
+
+
+```{r}
+m3a <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15 + Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute,
+  data = finaldata, index=c("category", "year"), model="within", SKI == 1)
+
+summary(m3a)
+```
+
+
+```{r}
+m3b <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15 + Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute,
+  data = finaldata, index=c("category", "year"), model="within", SKI == 0)
+
+summary(m3b)
 ```
 
 
@@ -27,14 +112,11 @@ ut_wide <- read_excel("~/Documents/Minimum Wage Ski/UT_CO_Min_Wage_Research.xls"
 
 
 
+instrumental variable regression:
 
+aer ivreg 
 
-
-
-
-
-
-
+robust regression 
 
 
 
