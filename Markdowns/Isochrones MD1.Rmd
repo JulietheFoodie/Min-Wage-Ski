@@ -5,6 +5,10 @@ date: "5/22/2018"
 output: html_document
 ---
 
+FYI- The code in this markdown takes a while to run. 
+
+#Libraries
+
 ```{r}
 library(osrm)
 library(dplyr)
@@ -16,6 +20,8 @@ webshot::install_phantomjs()
 ```
 
 # Data Download for Counties 
+
+
 ```{r}
 url<-"http://www2.census.gov/geo/tiger/TIGER2010DP1/County_2010Census_DP1.zip"
 downloaddir<-getwd()

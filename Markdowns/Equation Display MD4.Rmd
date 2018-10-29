@@ -1,0 +1,46 @@
+---
+title: "Equation Display MD4"
+author: "Julie Norman"
+date: "10/28/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Libraries
+
+```{r}
+library(stargazer)
+library(plm)
+```
+
+# Display
+
+## All Counties
+
+```{r}
+stargazer(didFE, slsDID, feLgLg, slsLgLg, type = "text")
+```
+
+
+# Robust standard errors 
+```{r}
+# Sample Code
+> fm<-log(gsp)~log(pcap)+log(pc)+log(emp)+unemp 
+> data(Produc) 
+> ## est. FE model 
+> femod<-plm(fm, Produc) 
+> ## extract time-demeaned data 
+> demy<-pmodel.response(femod, model="within") 
+> demX<-model.matrix(femod, model="within") 
+> ## estimate lm model on demeaned data 
+> ## (equivalent to FE, but makes a 'lm' object) 
+> demod<-lm(demy~demX-1) 
+> library(sandwich) 
+> library(lmtest) 
+> ## apply HAC covariance, e.g., to t-tests 
+> coeftest(demod, vcov=vcovHAC)
+```
+

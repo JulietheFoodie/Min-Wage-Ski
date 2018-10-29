@@ -47,7 +47,7 @@ didFE <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y
 
 didFEb <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute | . -urn  (+CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute+ discyouth + burdenedhh), data = finaldata, index=c("category", "year"), model="within")
 
-summary(m1)
+didFE
 
 ```
 
@@ -58,13 +58,14 @@ summary(m1)
 ```{r}
 slsDID <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute | SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute  + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + discyouth + burdenedhh, data = finaldata, index=c("category", "year"), model="within")
 
+#Incorrect
 #m2 <- ivreg(ln_n ~urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute| urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute +CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute+ discyouth + burdenedhh, data = finaldata)
 
 #m2 <- ivreg(ln_n ~ SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + urn | SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + discyouth + burdenedhh, data = finaldata)
 
 #m2 <- ivreg(ln_n ~ SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + urn | .-urn + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute+ discyouth + burdenedhh, data = finaldata)
 
-summary(m2)
+slsDID
 ```
 
 
@@ -74,7 +75,7 @@ summary(m2)
 feLgLg <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+  ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute,
   data = finaldata, index=c("category", "year"), model="within")
 
-summary(m3)
+feLgLg
 ```
 
 
@@ -84,7 +85,7 @@ summary(m3)
 ```{r}
 slsLgLg <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+  ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute | SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+  ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute  + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + discyouth + burdenedhh, data = finaldata, index=c("category", "year"), model="within")
 
-summary(m4)
+slsLgLg
 ```
 
 
@@ -103,7 +104,7 @@ didFE_SKI <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xC
 
 didFEb_SKI <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute | . -urn  (+CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute+ discyouth + burdenedhh), data = finaldata, index=c("category", "year"), model="within", SKI == 1)
 
-summary(m1)
+didFE_SKI
 
 ```
 
@@ -120,7 +121,7 @@ slsDID_SKI <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11x
 
 #slsDID_SKI <- ivreg(ln_n ~ SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + urn | .-urn + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute+ discyouth + burdenedhh, data = finaldata, SKI == 1)
 
-summary(m2)
+slsDID_SKI
 ```
 
 
@@ -130,7 +131,7 @@ summary(m2)
 feLgLg_SKI <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+  ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute,
   data = finaldata, index=c("category", "year"), model="within", SKI == 1)
 
-summary(m3)
+feLgLg_SKI
 ```
 
 
@@ -139,7 +140,7 @@ summary(m3)
 ```{r}
 slsLgLg_SKI <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+  ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute | SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+  ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute  + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + discyouth + burdenedhh, data = finaldata, index=c("category", "year"), model="within", SKI == 1)
 
-summary(m4)
+slsLgLg_SKI
 ```
 
 
@@ -154,7 +155,7 @@ didFE_nSKI <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11x
 
 didFEb_nSKI <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute | . -urn  (+CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute+ discyouth + burdenedhh), data = finaldata, index=c("category", "year"), model="within", SKI == 0)
 
-summary(didFE_nSKI)
+didFE_nSKI
 
 ```
 
@@ -172,7 +173,7 @@ slsDID_nSKI <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11
 
 ##slsDID_nSKI <- ivreg(ln_n ~ SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + urn | .-urn + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute+ discyouth + burdenedhh, data = finaldata, SKI == 0)
 
-summary(slsDID_nSKI)
+slsDID_nSKI
 ```
 
 
@@ -182,7 +183,7 @@ summary(slsDID_nSKI)
 feLgLg_nSKI <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+  ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute,
   data = finaldata, index=c("category", "year"), model="within", SKI == 0)
 
-summary(feLgLg_nSKI)
+feLgLg_nSKI
 ```
 
 
@@ -191,7 +192,7 @@ summary(feLgLg_nSKI)
 ```{r}
 slsLgLg_nSKI <- plm(ln_n ~ urn + SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+  ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute | SKI + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+  ln_minwage + ln_medhhinc + hsgrad + bsdeg + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16+ Y11xCO+ Y12xCO + Y13xCO + Y14xCO + Y15xCO + Y16xCO + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute  + CO + Y11 + Y12 + Y13 + Y14 + Y15+ Y16 + ln_minwage + ln_medhhinc + hsgrad + bsdeg  + black + hspn + povrateall + eqfxsubprime + incineq + ln_medage + avgcommute + discyouth + burdenedhh, data = finaldata, index=c("category", "year"), model="within", SKI == 0)
 
-summary(slsLgLg_nSKI)
+slsLgLg_nSKI
 ```
 
 
