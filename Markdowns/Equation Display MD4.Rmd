@@ -14,7 +14,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(stargazer)
 library(plm)
+library(pcse)
+
 ```
+# Summary
+
+Standard errors are robust (correct for heteroskedasticity)
+
 
 # Display
 
@@ -24,23 +30,17 @@ library(plm)
 stargazer(didFE, slsDID, feLgLg, slsLgLg, type = "text")
 ```
 
+## Results for Ski Counties
 
-# Robust standard errors 
 ```{r}
-# Sample Code
-> fm<-log(gsp)~log(pcap)+log(pc)+log(emp)+unemp 
-> data(Produc) 
-> ## est. FE model 
-> femod<-plm(fm, Produc) 
-> ## extract time-demeaned data 
-> demy<-pmodel.response(femod, model="within") 
-> demX<-model.matrix(femod, model="within") 
-> ## estimate lm model on demeaned data 
-> ## (equivalent to FE, but makes a 'lm' object) 
-> demod<-lm(demy~demX-1) 
-> library(sandwich) 
-> library(lmtest) 
-> ## apply HAC covariance, e.g., to t-tests 
-> coeftest(demod, vcov=vcovHAC)
+stargazer(didFE_SKI, slsDID_SKI, feLgLg_SKI, slsLgLg_SKI, type = "text")
 ```
+
+## Results for nonSki Counties
+
+```{r}
+stargazer(didFE_nSKI, slsDID_nSKI, feLgLg_nSKI, slsLgLg_nSKI, type = "text")
+```
+
+
 
